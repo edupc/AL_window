@@ -1,0 +1,23 @@
+pywin32==222
+Pillow==7.0.0
+psutil==5.6.0
+
+
+
+
+增加偏移拘束
+def add_offset_assembly(element1,element2,dist,relation):
+    catapp = win32.Dispatch("CATIA.Application")
+    productdoc = catapp.ActiveDocument
+    product = productdoc.Product
+    product = product.ReferenceProduct
+    constraints = product.Connections("CATIAConstraints")
+    ref1 = product.CreateReferenceFromName("Product1/%s.1/!%s" % (element1,relation))
+    ref2 = product.CreateReferenceFromName("Product1/%s.1/!%s" % (element2,relation))
+    #1表示偏移拘束
+    constraint = constraints.AddBiEltCst(1,ref1,ref2)
+    length = constraint.Dimension
+    length.value = dist
+    constraint.Orientation = 0
+    product.Update()
+    return True
