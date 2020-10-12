@@ -1,7 +1,7 @@
 import win32com.client as win32
 import datetime,string,os
 import globals_var as gvar
-from qt5 import untitled, Win1 #, Ui_toolcheck, Ui_widget_projectcheck , Ui_check
+
 
 #Part 開啟
 def part_open(target,dir):
@@ -215,8 +215,8 @@ class set_CATIA_workbench_env:
 
 #抓part名稱
 catia_save = ['top','right','following','left']
-small_catia_save = ['3','4','5','7']#名稱再來修訂吧3457 小玻璃架
-small2_catia_save = ['1','2','3.1','5.1',]#名稱再來修訂吧.1235 小玻璃架
+small_catia_save = ['small_top','small_left','small_right','small_following']#名稱再來修訂吧3457 小玻璃架
+small2_catia_save = ['small2_following','small2_left','small2_top','small2_right']#名稱再來修訂吧.1235 小玻璃架
 
  #if save_dir != []:
 
@@ -236,13 +236,13 @@ env.Generative_Sheetmetal_Design()
 # 執行式-open資料夾內的following檔案'
 part_open("following", system_root+"\\big_window")
 #抓出parameter內的數值針對'width'做改變
-Sideplate_param_change("width", float(387.5))
+Sideplate_param_change("width", gvar.width)
 part_open("left", system_root+"\\big_window")
-Sideplate_param_change("height", float(300))
+Sideplate_param_change("height", gvar.height)
 part_open("right", system_root+"\\big_window")
-Sideplate_param_change("height", float(300))
+Sideplate_param_change("height", gvar.height)
 part_open("top", system_root+"\\big_window")
-Sideplate_param_change("width", float(387.5))
+Sideplate_param_change("width", gvar.width)
 #新增資料夾路徑
 full_save_dir = save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
 #新增資料夾名稱
@@ -270,14 +270,14 @@ show("left.1")
 show("right.1")
 show("top.1")
 #組立偏移(原點座標去坐函數偏移)
-add_offset_assembly("left","top",-gvar.width,"yz plane") #偏移組合(零件一,零件二,距離,元素)
+add_offset_assembly("left","top",gvar.width,"yz plane") #偏移組合(零件一,零件二,距離,元素)
 add_offset_assembly("left","top",0,"xy plane")
 add_offset_assembly("left","top",0,"zx plane")
-add_offset_assembly("right","top",-387.5,"yz plane")
+add_offset_assembly("right","top",-gvar.width,"yz plane")
 add_offset_assembly("right","top",0,"xy plane")
 add_offset_assembly("right","top",0,"zx plane")
 add_offset_assembly("following","top",0,"yz plane")
-add_offset_assembly("following","top",-555,"xy plane")
+add_offset_assembly("following","top",(-2*gvar.height)+45,"xy plane")
 add_offset_assembly("following","top",0,"zx plane")
 
 # test_1("Part2","top",1,"right_plane") #偏移組合(零件一,零件二,距離,元素)
@@ -291,40 +291,40 @@ print('Saved as CATProduct...')
 
 # ------------------------------------------------------------------------------------smallwindow1(有把手的那個)
 
-part_open("3", system_root+"\\smalll_window")
-Sideplate_param_change("height", float(172.5))#172.5
-part_open("4", system_root+"\\smalll_window")
-Sideplate_param_change("width", float(255))#255height172.5
-part_open("5", system_root+"\\smalll_window")
-Sideplate_param_change("width", float(255))#172.5
-part_open("7", system_root+"\\smalll_window")
-Sideplate_param_change("height", float(172.5))#255
+part_open("small_top", system_root+"\\smalll_window")
+Sideplate_param_change("height", gvar.small_height)#172.5
+part_open("small_left", system_root+"\\smalll_window")
+Sideplate_param_change("width", gvar.small_width)#255
+part_open("small_right", system_root+"\\smalll_window")
+Sideplate_param_change("width", gvar.small_width)#255
+part_open("small_following", system_root+"\\smalll_window")
+Sideplate_param_change("height", gvar.small_height)#172.5
 full_save_dir = save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
 print("%s" % full_save_dir)
 for item in small_catia_save:
     saveas_close(full_save_dir, item, '.CATPart')
 open_assembly()
 
-assembly_open_file(full_save_dir, "3", 0)
-assembly_open_file(full_save_dir, "4", 0)
-assembly_open_file(full_save_dir, "5", 0)
-assembly_open_file(full_save_dir, "7", 0)
+assembly_open_file(full_save_dir, "small_top", 0)
+assembly_open_file(full_save_dir, "small_left", 0)
+assembly_open_file(full_save_dir, "small_right", 0)
+assembly_open_file(full_save_dir, "small_following", 0)
 
-saveas_specify_target(full_save_dir,"3",'CATPart')
-saveas_specify_target(full_save_dir,"4",'CATPart')
-saveas_specify_target(full_save_dir,"5",'CATPart')
-saveas_specify_target(full_save_dir,"7",'CATPart')
+saveas_specify_target(full_save_dir,"small_top",'CATPart')
+saveas_specify_target(full_save_dir,"small_left",'CATPart')
+saveas_specify_target(full_save_dir,"small_right",'CATPart')
+saveas_specify_target(full_save_dir,"small_following",'CATPart')
 show("Part3.1")
 show("Part4.1")
 show("Part8.1")
 show("Part9.1")
-add_offset_assembly("Part3","Part9",-449.01,"xy plane") #偏移組合(零件一,零件二,距離,元素)
+add_offset_assembly("Part3","Part9",(-gvar.small_width*2)+50.99+10.105,"xy plane") #偏移組合(零件一,零件二,距離,元素)
 add_offset_assembly("Part3","Part9",0,"yz plane")
 add_offset_assembly("Part3","Part9",0,"zx plane")
-add_offset_assembly("Part9","Part4",172.5,"yz plane")#變數.一半的h
-add_offset_assembly("Part9","Part4",242.31,"xy plane")#變數.w-12.69
+add_offset_assembly("Part9","Part4",gvar.small_height,"yz plane")#變數.一半的h
+add_offset_assembly("Part9","Part4",gvar.small_width-12.69,"xy plane")#變數.w-12.69
 add_offset_assembly("Part9","Part4",0,"zx plane")
-add_offset_assembly("Part4","Part8",-345,"yz plane")#變數
+add_offset_assembly("Part4","Part8",-gvar.small_height*2,"yz plane")#變數
 add_offset_assembly("Part4","Part8",0,"xy plane")
 add_offset_assembly("Part4","Part8",0,"zx plane")
 saveas(full_save_dir, 'Product1', '.CATProduct')
@@ -332,45 +332,43 @@ print('Saved as CATProduct...')
 
 #------------------------------------------------------------------------------------smallwindow2(沒把手的那個)
 
-part_open("1", system_root+"\\small2_window")
-Sideplate_param_change("height", float(172.5))#height343
-part_open("2", system_root+"\\small2_window")
-Sideplate_param_change("width", float(267.5))#width267.5
-part_open("3.1", system_root+"\\small2_window")
-Sideplate_param_change("height", float(172.5))#height343
-part_open("5.1", system_root+"\\small2_window")
-Sideplate_param_change("width", float(267.5))#width267.5
+part_open("small2_following", system_root+"\\small2_window")
+Sideplate_param_change("height", gvar.small_height)#height343
+part_open("small2_left", system_root+"\\small2_window")
+Sideplate_param_change("width", gvar.small2_width)#width267.5
+part_open("small2_top", system_root+"\\small2_window")
+Sideplate_param_change("height", gvar.small_height)#height343
+part_open("small2_right", system_root+"\\small2_window")
+Sideplate_param_change("width", gvar.small2_width)#width267.5
 full_save_dir = save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
 print("%s" % full_save_dir)
 for item in small2_catia_save:
     saveas_close(full_save_dir, item, '.CATPart')
 open_assembly()
-assembly_open_file(full_save_dir, "1", 0)
-assembly_open_file(full_save_dir, "2", 0)
-assembly_open_file(full_save_dir, "3.1", 0)
-assembly_open_file(full_save_dir, "5.1", 0)
-saveas_specify_target(full_save_dir,"1",'CATPart')
-saveas_specify_target(full_save_dir,"2",'CATPart')
-saveas_specify_target(full_save_dir,"3.1",'CATPart')
-saveas_specify_target(full_save_dir,"5.1",'CATPart')
+assembly_open_file(full_save_dir, "small2_following", 0)
+assembly_open_file(full_save_dir, "small2_left", 0)
+assembly_open_file(full_save_dir, "small2_top", 0)
+assembly_open_file(full_save_dir, "small2_right", 0)
+saveas_specify_target(full_save_dir,"small2_following",'CATPart')
+saveas_specify_target(full_save_dir,"small2_left",'CATPart')
+saveas_specify_target(full_save_dir,"small2_top",'CATPart')
+saveas_specify_target(full_save_dir,"small2_right",'CATPart')
 show("Part1.1")#更訂patt名稱
 show("Part2.1")#更訂patt名稱
 show("Part3.1")#更訂patt名稱
 show("Part5.1")#更訂patt名稱
-add_offset_assembly("Part3","Part1",-487,"xy plane")#變數.
+add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#變數.
 add_offset_assembly("Part1","Part3",0,"yz plane")
 add_offset_assembly("Part1","Part3",0,"zx plane")
-add_offset_assembly("Part2","Part1",172.5,"yz plane")#變數.
-add_offset_assembly("Part2","Part1",-267.5,"xy plane")#變數.
+add_offset_assembly("Part2","Part1",gvar.small_height,"yz plane")#變數.
+add_offset_assembly("Part2","Part1",-gvar.small2_width,"xy plane")#變數.
 add_offset_assembly("Part2","Part1",0,"zx plane")
-add_offset_assembly("Part5","Part1",-172.5,"yz plane")#變數.
-add_offset_assembly("Part5","Part1",-267.5,"xy plane")
+add_offset_assembly("Part5","Part1",-gvar.small_height,"yz plane")#變數.
+add_offset_assembly("Part5","Part1",-gvar.small2_width,"xy plane")
 add_offset_assembly("Part5","Part1",0,"zx plane")
 saveas(full_save_dir, 'Product2', '.CATProduct')
 print('Saved as CATProduct...')
 
-
-#------------------------------------------------------------------------------------Window Start
 
 
 
