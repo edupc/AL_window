@@ -1,6 +1,7 @@
 import win32com.client as win32
 import datetime,string,os
-from qt5 import untitled,Win1 #, Ui_toolcheck, Ui_widget_projectcheck , Ui_check
+import globals_var as gvar
+from qt5 import untitled, Win1 #, Ui_toolcheck, Ui_widget_projectcheck , Ui_check
 
 #Part 開啟
 def part_open(target,dir):
@@ -269,7 +270,7 @@ show("left.1")
 show("right.1")
 show("top.1")
 #組立偏移(原點座標去坐函數偏移)
-add_offset_assembly("left","top",387.5,"yz plane") #偏移組合(零件一,零件二,距離,元素)
+add_offset_assembly("left","top",-gvar.width,"yz plane") #偏移組合(零件一,零件二,距離,元素)
 add_offset_assembly("left","top",0,"xy plane")
 add_offset_assembly("left","top",0,"zx plane")
 add_offset_assembly("right","top",-387.5,"yz plane")
@@ -372,7 +373,7 @@ print('Saved as CATProduct...')
 #------------------------------------------------------------------------------------Window Start
 
 
-if __name__ == '__main__' :
+
 
 
 
