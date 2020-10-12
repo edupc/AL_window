@@ -1,5 +1,6 @@
 import win32com.client as win32
 import datetime,string,os
+from qt5 import untitled,Win1 #, Ui_toolcheck, Ui_widget_projectcheck , Ui_check
 
 #Part 開啟
 def part_open(target,dir):
@@ -368,8 +369,10 @@ saveas(full_save_dir, 'Product2', '.CATProduct')
 print('Saved as CATProduct...')
 
 
+#------------------------------------------------------------------------------------Window Start
 
 
+if __name__ == '__main__' :
 
 
 
