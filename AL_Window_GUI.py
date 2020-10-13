@@ -271,10 +271,10 @@ show("right.1")
 show("top.1")
 #組立偏移(原點座標去坐函數偏移)
 add_offset_assembly("left","top",gvar.width,"yz plane") #偏移組合(零件一,零件二,距離,元素)
-add_offset_assembly("left","top",0,"xy plane")
+add_offset_assembly("left","top",-gvar.height+300,"xy plane")
 add_offset_assembly("left","top",0,"zx plane")
 add_offset_assembly("right","top",-gvar.width,"yz plane")
-add_offset_assembly("right","top",0,"xy plane")
+add_offset_assembly("right","top",-gvar.height+300,"xy plane")
 add_offset_assembly("right","top",0,"zx plane")
 add_offset_assembly("following","top",0,"yz plane")
 add_offset_assembly("following","top",(-2*gvar.height)+45,"xy plane")
@@ -385,7 +385,7 @@ print('Saved as CATProduct...')
 
 
 
-
+#
 
 
 
