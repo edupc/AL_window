@@ -211,7 +211,7 @@ About This System:</string>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit">
+          <widget class="QLineEdit" name="lineEdit_file_root">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -234,7 +234,7 @@ About This System:</string>
         </layout>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton">
+        <widget class="QToolButton" name="pushButton_route">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -276,7 +276,6 @@ About This System:</string>
  </widget>
  <resources>
   <include location="123.qrc"/>
-  <include location="../../../.designer/backup/123.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -5,6 +5,7 @@ import globals_var as gvar
 from PyQt5.QtWidgets import QMessageBox, QAbstractItemView, QTableWidgetItem
 import Window_Catia as wc
 import string,datetime
+from datetime import datetime,timezone,timedelta
 import win32com.client as win32
 
 
@@ -17,6 +18,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.pushButton_start.clicked.connect(self.create_window)
         self.ui.label.setPixmap(QtGui.QPixmap(BASE_DIR + "\\mprdc_logo.png"))
         self.ui.label.setScaledContents(True)
+        self.setWindowIcon(QtGui.QIcon(BASE_DIR + "\\ico.ico"))
+        self.ui.pushButton_route.clicked.connect(self.save_file_root)
+        self.ui.pushButton_catiastart.clicked.connect(wc.start_CATIA)
+
+    def save_file_root(self):
+        #directory 變數名稱
+        self.route = QtWidgets.QFileDialog.getExistingDirectory(None,
+                                                                    "選取資料夾")
+        self.ui.lineEdit_file_root.setText(self.route)
     def create_window(self):
         print(gvar.width, gvar.height)
         self.env = wc.set_CATIA_workbench_env()
@@ -29,7 +39,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("height", gvar.height)
         wc.part_open("top", system_root+"\\big_window")
         wc.Sideplate_param_change("width", gvar.width)
-        self.full_save_dir = wc.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+        if self.route == '':
+            gvar.full_save_dir = wc.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+        else:
+            gvar.full_save_dir = wc.save_dir(self.route)
+        self.full_save_dir = gvar.full_save_dir
         print("%s" % self.full_save_dir)
         self.catia_save = ['top', 'right', 'following', 'left']
         self.small_catia_save = ['small_top', 'small_left', 'small_right', 'small_following']
@@ -69,7 +83,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("width", gvar.small_width)  # 255
         wc.part_open("small_following", system_root + "\\smalll_window")
         wc.Sideplate_param_change("height", gvar.small_height)  # 172.5
-        wc.full_save_dir = self.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+        # wc.full_save_dir = self.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
         print("%s" % self.full_save_dir)
         for item in self.small_catia_save:
             wc.saveas_close(self.full_save_dir, item, '.CATPart')
@@ -107,7 +121,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("height", gvar.small_height)  # height343
         wc.part_open("small2_right", system_root + "\\small2_window")
         wc.Sideplate_param_change("width", gvar.small2_width)  # width267.5
-        wc.full_save_dir = self.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+        # wc.full_save_dir = self.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
         print("%s" % self.full_save_dir)
         for item in self.small2_catia_save:
             wc.saveas_close(self.full_save_dir, item, '.CATPart')
@@ -136,34 +150,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.saveas(self.full_save_dir, 'Product2', '.CATProduct')
         print('Saved as CATProduct...')
 
-
-
-
-
-
-    def save_dir(self,save_dir):
-        time_now = datetime.datetime.now()
-
-        product_name = ('AL%s%s' % (str(gvar.width), str(gvar.height)))
-        year = str((int(time_now.strftime('%Y')) % 1000) % 100)
-        code_E = list(string.ascii_uppercase)
-        month = code_E[int(time_now.strftime('%m')) - 1]
-        code_e = list(string.ascii_lowercase)
-        day = time_now.strftime('%d')
-        hour = code_e[int(time_now.strftime('%H'))]
-        minute = time_now.strftime('%M')
-
-        file_name = ('%s-%s%s%s%s%s' % (product_name, year, month, day, hour, minute))
-        try:
-            save_dir = '\\'.join(save_dir.split('/'))  # if using GUI to set file_dir
-        except:  # if using API call method, which file_dir has benn processed
-            pass
-        newpath = os.path.join(save_dir, file_name)
-        print(newpath)
-        if not os.path.exists(newpath):
-            os.makedirs(newpath)
-        return newpath
-
     def open(self):
         self.hide()#隱藏
         self.window = Create()
@@ -177,17 +163,20 @@ class Create(QtWidgets.QMainWindow, creat):
         self.ui.setupUi(self)
         self.ui.pushButton_setup.clicked.connect(self.set_ok)
         #--------------圖片
-        self.ui.label_image.setPixmap(QtGui.QPixmap(BASE_DIR+'\\AL_window_image'))
+        self.ui.label_image.setPixmap(QtGui.QPixmap(BASE_DIR+'\\window_test_image'))
         #--------------根據框框大小縮放圖片
         self.ui.label_image.setScaledContents(True)
         # self.ui.pushButton_setup.clicked.connect(self.set_ok)
+
+
+
 
 
     def set_ok(self):
         if self.ui.lineEdit_width.text() != '' and self.ui.lineEdit_height.text() != '':
             gvar.width = float(self.ui.lineEdit_width.text())
             gvar.height = float(self.ui.lineEdit_height.text())
-            self.reply = QMessageBox.question(self, "警示", "確定離開量測頁面?", QMessageBox.Yes, QMessageBox.No)
+            self.reply = QMessageBox.question(self, "提示", "設定完成", QMessageBox.Yes, QMessageBox.No)
             if self.reply == QMessageBox.Yes:
                 self.hide()
                 self.window = MainWindow()

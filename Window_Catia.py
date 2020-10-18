@@ -1,8 +1,44 @@
 import win32com.client as win32
-import datetime,string,os
+import datetime,string,os,psutil
 import globals_var as gvar
+import re
+import subprocess
+from subprocess import CREATE_NEW_CONSOLE
+from datetime import datetime,timezone,timedelta
 
 
+def start_CATIA(self):
+    # try to CATIA enviorment file
+    env_dir = 'C:\ProgramData\DassaultSystemes\CATEnv'
+    list_dir = os.listdir(env_dir)
+    print(list_dir)
+    if any('V5-6R' in file for file in list_dir):
+        for file in list_dir:
+            if 'V5-6R' in file:
+                env_file = open(env_dir + '\\' + file, 'rt')
+                env_line = env_file.read().splitlines()
+                for line in env_line:
+                    if 'CATInstallPath' in line:
+                        CATIA_dir = re.sub('CATInstallPath=', '', line)
+                        env_name = re.sub('.txt', '', file)
+                        print('get CATIA dir and env is %s , %s' % (CATIA_dir, env_name))
+
+    else:
+        tk.messagebox.showwarning('WARNING', 'No Suitable V5-6R Version CATIA installation found on this machine',
+                                  parent=self.master)
+
+    chk = [p.info for p in psutil.process_iter(attrs=['pid', 'name']) if 'CNEXT' in p.info['name']]
+    print(chk)
+    if chk == []:
+        args = [r"%s\code\bin\CATSTART.exe" % CATIA_dir, "-run", "CNEXT.exe", "-env %s -direnv" % env_name,
+                "C:\ProgramData\DassaultSystemes\CATEnv", "-nowindow"]
+        print(args)
+        request = subprocess.Popen(args, shell=False, creationflags=CREATE_NEW_CONSOLE)
+        print(str(request))
+        print(os.getpid())
+        return False
+    else:
+        return True
 #Part 開啟
 def part_open(target,dir):
     catapp = win32.Dispatch("CATIA.Application")
@@ -75,27 +111,25 @@ def open_assembly():
 
 
 def save_dir(save_dir):
-    time_now = datetime.datetime.now()
+    time_now = datetime.now()
+    # 資料夾名稱
+    product_name = ('AL%s%s' % (str(int(gvar.width)), str(int(gvar.height))))
+    dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
+    dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
+    # print(dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'"))  # 將時間轉換為 string
+    print(dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'"))
+    file_name = ("%s-%s" % (product_name, dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'")))
 
-    product_name=('AL%s%s'%(str(gvar.width), str(gvar.height)))
-    year=str((int(time_now.strftime('%Y'))%1000)%100)
-    code_E=list(string.ascii_uppercase)
-    month=code_E[int(time_now.strftime('%m'))-1]
-    code_e=list(string.ascii_lowercase)
-    day =time_now.strftime('%d')
-    hour=code_e[int(time_now.strftime('%H'))]
-    minute=time_now.strftime('%M')
-
-    file_name=('%s-%s%s%s%s%s'%(product_name,year,month,day,hour,minute))
     try:
-        save_dir = '\\'.join(save_dir.split('/'))   # if using GUI to set file_dir
-    except:     # if using API call method, which file_dir has benn processed
+        save_dir = '\\'.join(save_dir.split('/'))  # if using GUI to set file_dir
+    except:  # if using API call method, which file_dir has benn processed
         pass
     newpath = os.path.join(save_dir, file_name)
     print(newpath)
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     return newpath
+
 
 def saveas_close(save_dir,target,data_type):
     catapp = win32.Dispatch('CATIA.Application')
