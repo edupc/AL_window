@@ -151,7 +151,6 @@ class Ui_MainWindow(object):
         self.actionsave.setObjectName("actionsave")
 
         self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -170,7 +169,7 @@ class Ui_MainWindow(object):
         self.pushButton_route.setText(_translate("MainWindow", "..."))
         self.actionsave.setText(_translate("MainWindow", "save"))
 
-
+#---------------------------------------------------------------------------------------------------------------設定介面
 
 class creat (object):
 
@@ -360,7 +359,7 @@ class creat (object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -381,3 +380,59 @@ class creat (object):
         self.label_7.setText(_translate("MainWindow", "選擇箱體材料與烤漆顏色(僅影響圖面輸出)\n"
                                                       "Select Box material and Coating color(only affects draft output)"))
 
+#---------------------------------------------------------------------------------------------------------------------------------關於介面
+
+class about (object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(596, 502)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(30, -10, 541, 461))
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setFocusPolicy(QtCore.Qt.WheelFocus)
+        self.label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 596, 21))
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.label.setText(_translate("MainWindow", "\'\'\'        本系統為國立高雄科技大學(第一校區)產品與自動化實驗室與\n"
+                                                    "        正勤鋁業有限公司以科技部產學合作計畫開發\n"
+                                                    "        著作所有，請勿侵權\n"
+                                                    "\n"
+                                                    "        開發者:\n"
+                                                    "\n"
+                                                    "        科技部計畫編號:\n"
+                                                    "\n"
+                                                    "\n"
+                                                    "        This Automated Design System is developed by Product \n"
+                                                    "        Development Automation Lab, National kaoshiung University \n"
+                                                    "        of \n"
+                                                    "        -University Cooperative Research Project of MOST,Taiwan\n"
+                                                    "\n"
+                                                    "        Copyright © 2018 Product Developement Automation Lab,NKUST. \n"
+                                                    "        All rights reserved.\n"
+                                                    "\n"
+                                                    "        Developer: \n"
+                                                    "\n"
+                                                    "        MOST Project serial:MOST \'\'\'"))

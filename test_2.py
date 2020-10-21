@@ -1,42 +1,38 @@
-from datetime import datetime,timezone,timedelta
-import os
-# dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
-# dt2 = dt1.astimezone(timezone(timedelta(hours=8))) # 轉換時區 -> 東八區
-#
-# print(dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'")) # 將時間轉換為 string
-#
-# product_name = ('AL%s%s' % (str(100.0), str(500.0)))
-# dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
-# dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
-#         #print(dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'"))  # 將時間轉換為 string
-# print(dt2.strftime)
-# file_name = ("%s-%s" % (product_name, dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'")))
-# save_dir ='C:\\Users\\PDAL-BM-1\\Desktop'
-# try:
-#     save_dir = '\\'.join(save_dir.split('/'))  # if using GUI to set file_dir
-# except:  # if using API call method, which file_dir has benn processed
-#     pass
-# newpath = os.path.join(save_dir, file_name)
-# print(newpath)
-# if not os.path.exists(newpath):
-#     os.makedirs(newpath)
-# print(newpath)
-def save_dir(save_dir):
-    time_now = datetime.now()
-    # 資料夾名稱
-    product_name = ('AL%s%s' % (str(int(500)), str(int(500))))
-    dt1 = datetime.utcnow().replace(tzinfo=timezone.utc)
-    dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
-    # print(dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'"))  # 將時間轉換為 string
-    print(dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'"))
-    file_name = ("%s-%s" % (product_name, dt2.strftime("%Y-%m-%d'%Hh%Mm%Ss'")))
+import sys
+from PyQt5.QtWidgets import QMainWindow,QHBoxLayout,QPushButton,QApplication,QWidget
 
-    try:
-        save_dir = '\\'.join(save_dir.split('/'))  # if using GUI to set file_dir
-    except:  # if using API call method, which file_dir has benn processed
-        pass
-    newpath = os.path.join(save_dir, file_name)
-    print(newpath)
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+'''
+主視窗:關閉主視窗
+'''
+
+class MainWin(QMainWindow):
+    def __init__(self,parent=None):
+        super().__init__(parent)
+        #標題設定
+        self.setWindowTitle('關閉主視窗例子')
+        #按鈕
+        self.button1=QPushButton('關閉主視窗')
+        self.button1.clicked.connect(self.onButtonClick)
+        #佈局--水平佈局
+        layout=QHBoxLayout()
+        layout.addWidget(self.button1)
+        #視窗中心控制元件
+        main_frame=QWidget()
+        main_frame.setLayout(layout)
+        self.setCentralWidget(main_frame)
+
+    def onButtonClick(self):
+        '''按鈕槽函式封裝'''
+        #獲取訊號傳送物件
+        sender=self.sender()
+        #列印訊號傳送物件的文字+列印輸出
+        print(sender.text()+'被按下了')
+        #建立QApplication物件並呼叫quit方法
+        qApp=QApplication.instance()
+        qApp.quit()
+
+if __name__=="__main__":
+    app=QApplication(sys.argv)
+    myMainWin=MainWin()
+    myMainWin.show()
+    sys.exit(app.exec_())

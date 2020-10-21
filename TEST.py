@@ -1,9 +1,10 @@
-from untitled import Ui_MainWindow, creat
+from untitled import Ui_MainWindow, creat ,about
 import sys , os
 from PyQt5 import QtWidgets, QtGui#視窗類型,圖片
 import globals_var as gvar
-from PyQt5.QtWidgets import QMessageBox, QAbstractItemView, QTableWidgetItem
+from PyQt5.QtWidgets import QMessageBox, QAbstractItemView, QTableWidgetItem,QApplication
 import Window_Catia as wc
+import sys
 import string,datetime
 from datetime import datetime,timezone,timedelta
 import win32com.client as win32
@@ -21,12 +22,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QtGui.QIcon(BASE_DIR + "\\ico.ico"))
         self.ui.pushButton_route.clicked.connect(self.save_file_root)
         self.ui.pushButton_catiastart.clicked.connect(wc.start_CATIA)
+        # self.ui.pushButton_close_all.clicked.connect(self.onButtonClick)
+        # self.ui.pushButton_about.clicked.connect(self.)
+        self.ui.pushButton_about.clicked.connect(self.open_about)
+        self.ui.pushButton_close_all.clicked.connect(self.Close)
+        self.route = ''
+
+    def Close(self):
+        # self.close()
+        self.reply = QMessageBox.question(self, "警示", "確定離開量測頁面?", QMessageBox.Yes, QMessageBox.No)
+        if self.reply == QMessageBox.Yes:
+            self.close()
+        elif self.reply == QMessageBox.No:
+            pass
+
+    def onButtonClick(self):
+        '''按鈕槽函式封裝'''
+        # 獲取訊號傳送物件
+        sender = self.sender()
+        # 列印訊號傳送物件的文字+列印輸出
+        print(sender.text() + '被按下了')
+        # 建立QApplication物件並呼叫quit方法
+        qApp = QApplication.instance()
+        qApp.quit()
+
 
     def save_file_root(self):
         #directory 變數名稱
-        self.route = QtWidgets.QFileDialog.getExistingDirectory(None,
-                                                                    "選取資料夾")
+        self.route = QtWidgets.QFileDialog.getExistingDirectory(None,"選取資料夾")
         self.ui.lineEdit_file_root.setText(self.route)
+
     def create_window(self):
         print(gvar.width, gvar.height)
         self.env = wc.set_CATIA_workbench_env()
@@ -39,6 +64,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("height", gvar.height)
         wc.part_open("top", system_root+"\\big_window")
         wc.Sideplate_param_change("width", gvar.width)
+        print(self.route)
         if self.route == '':
             gvar.full_save_dir = wc.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
         else:
@@ -154,9 +180,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.hide()#隱藏
         self.window = Create()
         self.window.show()
-        print("test")
+
+
+    def open_about(self):
+        self.hide()  # 隱藏
+        self.window = About()
+        self.window.show()
+
 
 class Create(QtWidgets.QMainWindow, creat):
+
     def __init__(self):
         super(Create, self).__init__()#繼承
         self.ui = creat()
@@ -168,15 +201,11 @@ class Create(QtWidgets.QMainWindow, creat):
         self.ui.label_image.setScaledContents(True)
         # self.ui.pushButton_setup.clicked.connect(self.set_ok)
 
-
-
-
-
     def set_ok(self):
         if self.ui.lineEdit_width.text() != '' and self.ui.lineEdit_height.text() != '':
             gvar.width = float(self.ui.lineEdit_width.text())
             gvar.height = float(self.ui.lineEdit_height.text())
-            self.reply = QMessageBox.question(self, "提示", "設定完成", QMessageBox.Yes, QMessageBox.No)
+            self.reply = QMessageBox.question(self, "提示", "設定完成\nSet Ok", QMessageBox.Yes, QMessageBox.No)
             if self.reply == QMessageBox.Yes:
                 self.hide()
                 self.window = MainWindow()
@@ -185,22 +214,24 @@ class Create(QtWidgets.QMainWindow, creat):
                 QtWidgets.QCloseEvent.ignore()
         else:
             print("err")
-    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        self.window = MainWindow()
-        self.window.show()
-# class test123(QtWidgets.QMainWindow, creat):
-#     def __init__(self):
-#         super(test123, self).__init__()#繼承
-#         self.ui = creat()
-#         self.ui.setupUi(self)
-#         self.ui.pushButton.clicked.connect(self.good)
-#     def good(self):
-#         gvar.width = self.ui.lineEdit_3.text()
-#         print(gvar.width)
-#     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-#         self.window = MainWindow()
-#         self.window.show()
 
+    # def window_close(self):
+    #     self.reply = QMessageBox.question(self, "提示", "確定要關閉主頁面嗎?\n Are you sure close all MainWindow?", QMessageBox.Yes, QMessageBox.No)
+    #     if self.reply == QMessageBox.Yes:
+    #         self.hide()
+    #         # self.ui.clicked.connect(self.onButtonClick)
+    #     elif self.reply == QMessageBox.No:
+    #         QtWidgets.QCloseEvent.ignore()
+    #
+
+
+
+
+class About(QtWidgets.QMainWindow, about):
+    def __init__(self):
+        super(About, self).__init__()#繼承
+        self.ui = about()
+        self.ui.setupUi(self)
 
 if __name__ == '__main__' :
     BASE_DIR = os.path.dirname(os.path.realpath(__file__))
