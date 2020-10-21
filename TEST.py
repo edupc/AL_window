@@ -1,16 +1,17 @@
 from untitled import Ui_MainWindow, creat ,about
 import sys , os
-from PyQt5 import QtWidgets, QtGui#視窗類型,圖片
+from PyQt5 import QtWidgets, QtGui
 import globals_var as gvar
 from PyQt5.QtWidgets import QMessageBox, QAbstractItemView, QTableWidgetItem,QApplication
 import Window_Catia as wc
-import sys
 import string,datetime
 from datetime import datetime,timezone,timedelta
 import win32com.client as win32
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+
+    # 在這裏的是系統開啟會重新re過一次的動作
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -28,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.pushButton_close_all.clicked.connect(self.Close)
         self.route = ''
 
+    # 關閉量測介面
     def Close(self):
         # self.close()
         self.reply = QMessageBox.question(self, "警示", "確定離開量測頁面?", QMessageBox.Yes, QMessageBox.No)
@@ -36,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         elif self.reply == QMessageBox.No:
             pass
 
+    # 關閉全系統(強制關閉)
     def onButtonClick(self):
         '''按鈕槽函式封裝'''
         # 獲取訊號傳送物件
@@ -46,12 +49,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         qApp = QApplication.instance()
         qApp.quit()
 
-
+    #儲存路徑
     def save_file_root(self):
         #directory 變數名稱
         self.route = QtWidgets.QFileDialog.getExistingDirectory(None,"選取資料夾")
         self.ui.lineEdit_file_root.setText(self.route)
 
+    #catia執行檔
     def create_window(self):
         print(gvar.width, gvar.height)
         self.env = wc.set_CATIA_workbench_env()
@@ -100,7 +104,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.add_offset_assembly("following", "top", 0, "zx plane")
         wc.saveas(self.full_save_dir, 'Product', '.CATProduct')
         print('Saved as CATProduct...')
-
         wc.part_open("small_top", system_root + "\\smalll_window")
         wc.Sideplate_param_change("height", gvar.small_height)  # 172.5
         wc.part_open("small_left", system_root + "\\smalll_window")
@@ -176,12 +179,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.saveas(self.full_save_dir, 'Product2', '.CATProduct')
         print('Saved as CATProduct...')
 
+    # 開啟關於設定參數介面
     def open(self):
         self.hide()#隱藏
         self.window = Create()
         self.window.show()
 
-
+    #開啟關於
     def open_about(self):
         self.hide()  # 隱藏
         self.window = About()
@@ -190,6 +194,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 class Create(QtWidgets.QMainWindow, creat):
 
+    #在這裏的是系統開啟會重新re過一次的動作
     def __init__(self):
         super(Create, self).__init__()#繼承
         self.ui = creat()
@@ -201,6 +206,7 @@ class Create(QtWidgets.QMainWindow, creat):
         self.ui.label_image.setScaledContents(True)
         # self.ui.pushButton_setup.clicked.connect(self.set_ok)
 
+    #設定設定完成提示框(yes or no)
     def set_ok(self):
         if self.ui.lineEdit_width.text() != '' and self.ui.lineEdit_height.text() != '':
             gvar.width = float(self.ui.lineEdit_width.text())
@@ -211,28 +217,18 @@ class Create(QtWidgets.QMainWindow, creat):
                 self.window = MainWindow()
                 self.window.show()
             elif self.reply == QMessageBox.No:
-                QtWidgets.QCloseEvent.ignore()
+                pass
+                # QtWidgets.QCloseEvent.ignore()
         else:
             print("err")
 
-    # def window_close(self):
-    #     self.reply = QMessageBox.question(self, "提示", "確定要關閉主頁面嗎?\n Are you sure close all MainWindow?", QMessageBox.Yes, QMessageBox.No)
-    #     if self.reply == QMessageBox.Yes:
-    #         self.hide()
-    #         # self.ui.clicked.connect(self.onButtonClick)
-    #     elif self.reply == QMessageBox.No:
-    #         QtWidgets.QCloseEvent.ignore()
-    #
-
-
-
-
+#about介面
 class About(QtWidgets.QMainWindow, about):
     def __init__(self):
         super(About, self).__init__()#繼承
         self.ui = about()
         self.ui.setupUi(self)
-
+#執行
 if __name__ == '__main__' :
     BASE_DIR = os.path.dirname(os.path.realpath(__file__))
     system_root = os.path.dirname(os.path.realpath(__file__))
@@ -240,4 +236,3 @@ if __name__ == '__main__' :
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
-
