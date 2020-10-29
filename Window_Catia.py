@@ -181,6 +181,7 @@ def add_offset_assembly(element1,element2,dist,relation):
     product.Update()
     return True
 
+#catia零件組合
 def test_1(element1,element2,dist,relation):
     catapp = win32.Dispatch("CATIA.Application")
     productdoc = catapp.ActiveDocument
@@ -194,6 +195,19 @@ def test_1(element1,element2,dist,relation):
     product.Update()
     return True
 
+#catia組件之組合
+def test_2(element1,element2,element4,element5,element3):
+    catapp = win32.Dispatch("CATIA.Application")
+    productdoc = catapp.ActiveDocument
+    product = productdoc.Product
+    product = product.ReferenceProduct
+    constraints1 = product.Connections("CATIAConstraints")
+    ref1 = product.CreateReferenceFromName("Product4/%s.1/%s.1/!PartBody/%s" % (element1,element2,element3))
+    ref2 = product.CreateReferenceFromName("Product4/%s.1/%s.1/!PartBody/%s" % (element4,element5,element3))
+    constraint1 = constraints1.AddBiEltCst(2, ref1,ref2)
+    constraint1.Orientation = 1
+    product.Update()
+
 def show(item):
     catapp = win32.Dispatch("CATIA.Application")
     productdoc = catapp.ActiveDocument
@@ -201,6 +215,17 @@ def show(item):
     products1 = product.Products
     product2 = products1.Item("%s" % item)
     product2.ActivateDefaultShape()
+
+def show_p(item,item1):
+    catapp = win32.Dispatch("CATIA.Application")
+    productDocument1 = catapp.ActiveDocument
+    product1 = productDocument1.Product
+    products1 = product1.Products
+    product2 = products1.Item("%s" % item)
+    products2 = product2.Products
+    product3 = products2.Item("%s" % item1)
+    product3.ActivateDefaultShape()
+
 
 
 class set_CATIA_workbench_env:
@@ -247,9 +272,9 @@ class set_CATIA_workbench_env:
 #------------------------------------------------------------------------------------------------------執行
 
 # #抓part名稱
-# catia_save = ['top','right','following','left']
-# small_catia_save = ['small_top','small_left','small_right','small_following']#名稱再來修訂吧3457 小玻璃架
-# small2_catia_save = ['small2_following','small2_left','small2_top','small2_right']#名稱再來修訂吧.1235 小玻璃架
+catia_save = ['top','right','following','left']
+small_catia_save = ['small_top','small_left','small_right','small_following']#名稱再來修訂吧3457 小玻璃架
+small2_catia_save = ['small2_following','small2_left','small2_top','small2_right']#名稱再來修訂吧.1235 小玻璃架
 #
 #  #if save_dir != []:
 #
@@ -408,23 +433,41 @@ class set_CATIA_workbench_env:
 #
 #
 
-
-
-
-
-
-
-
-
-
-
-
-
-#
-
-
-
-
+# full_save_dir = save_dir('C:\\Users\\PDAL-BM-1\\Desktop\\')
+# open_assembly()
+# assembly_open_file(full_save_dir, "Product", 1)
+# assembly_open_file(full_save_dir, "Product1", 1)
+# assembly_open_file(full_save_dir, "Product2", 1)
+# assembly_open_file(full_save_dir, "wheel_1", 0)
+# assembly_open_file(full_save_dir, "wheel_2", 0)
+# assembly_open_file(full_save_dir, "wheel", 0)
+# assembly_open_file(full_save_dir, "wheel", 0)
+# #閃亮小燈泡路徑應該要改
+# show("Part1.1")
+# show("Part2.1")
+# show("Part3.1")
+# show("Part5.1")
+# show("Part3.1")
+# show("Part4.1")
+# show("Part8.1")
+# show("Part9.1")
+# show("following.1")
+# show("left.1")
+# show("right.1")
+# show("top.1")
+# #
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合plane_wheel_A，組1跟組2
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合plane_wheel_B，組1跟組3
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合plane_wheel_A，組
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合plane_wheel_A
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合plane_wheel_A
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合plane_wheel_A
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合
+# add_offset_assembly("Part3","Part1",-gvar.small2_width*2+48,"xy plane")#把組合跟輪子結合
 
 
 
