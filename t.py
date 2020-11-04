@@ -43,8 +43,8 @@ import Window_Catia as wc
 
 # wc.show_p("Product1.1", "following.1")
 # wc.show_p('Product1.1', 'left.1')
-# wc.show_p('Product1.1', 'right.1')
-# wc.show_p('Product1.1', 'top.1')
+wc.show_p('Product1.1', 'right.1')
+wc.show_p('Product1.1', 'top.1')
 # wc.show_p('Product2.1', 'small_top.1')
 # wc.show_p('Product2.1', 'small_left.1')
 # wc.show_p('Product2.1', 'small_right.1')
@@ -57,3 +57,11 @@ import Window_Catia as wc
 # wc.show_p('Product3.1', 'small2_following.1')
 # wc.show_p('Product3.1', 'wheel_1.1')
 # wc.show_p('Product3.1', 'wheel_2.1')
+
+wc.show_off()
+
+
+
+
+
+

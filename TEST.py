@@ -23,8 +23,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QtGui.QIcon(BASE_DIR + "\\ico.ico"))
         self.ui.pushButton_route.clicked.connect(self.save_file_root)
         self.ui.pushButton_catiastart.clicked.connect(wc.start_CATIA)
-        # self.ui.pushButton_close_all.clicked.connect(self.onButtonClick)
-        # self.ui.pushButton_about.clicked.connect(self.)
         self.ui.pushButton_about.clicked.connect(self.open_about)
         self.ui.pushButton_close_all.clicked.connect(self.Close)
         self.route = ''
@@ -77,7 +75,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print("%s" % self.full_save_dir)
         self.catia_save = ['top', 'right', 'following', 'left']
         self.small_catia_save = ['small_top', 'small_left', 'small_right', 'small_following','wheel_1','wheel_2']
-        self.small2_catia_save = ['small2_following', 'small2_left', 'small2_top', 'small2_right']#,'wheel_1','wheel_2']
+        self.small2_catia_save = ['small2_following', 'small2_left', 'small2_top', 'small2_right','wheel_3','wheel_4']#,'wheel_1','wheel_2']
+        self.AL_Window = ['Product','Product1','Product2']
         for item in self.catia_save:
             wc.saveas_close(self.full_save_dir, item, '.CATPart')
         wc.open_assembly()
@@ -102,8 +101,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.add_offset_assembly("following", "top", 0, "yz plane")
         wc.add_offset_assembly("following", "top", (-2 * gvar.height) + 45, "xy plane")
         wc.add_offset_assembly("following", "top", 0, "zx plane")
-        wc.saveas(self.full_save_dir, 'Product', '.CATProduct')
-        print('Saved as CATProduct...')
+        # wc.saveas(self.full_save_dir, 'Product', '.CATProduct')
+        # print('Saved as CATProduct...')
+
+        # -------------------------------------------------------------------------------------------------------2
+
         wc.part_open("small_top", system_root + "\\smalll_window")
         wc.Sideplate_param_change("height", gvar.small_height)  # 172.5
         wc.part_open("small_left", system_root + "\\smalll_window")
@@ -112,12 +114,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("width", gvar.small_width)  # 255
         wc.part_open("small_following", system_root + "\\smalll_window")
         wc.Sideplate_param_change("height", gvar.small_height)  # 172.5
-
         wc.part_open("wheel_1", system_root + "\\smalll_window")
         wc.part_open("wheel_2", system_root + "\\smalll_window")
-        # wc.full_save_dir = self.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
         print("%s" % self.full_save_dir)
-#-------------------------------------------------------------------------------------------------------2
         for item in self.small_catia_save:
             wc.saveas_close(self.full_save_dir, item, '.CATPart')
         wc.open_assembly()
@@ -139,7 +138,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.show("small_following.1")#small_following
         wc.show("wheel_1.1")
         wc.show("wheel_2.1")
-
         wc.add_offset_assembly("small_top", "small_following", (-gvar.small_width * 2) + 50.99 + 10.105,
                             "xy plane")  # 偏移組合(零件一,零件二,距離,元素)
         wc.add_offset_assembly("small_top", "small_following", 0, "yz plane")
@@ -154,11 +152,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.add_offset_assembly('wheel_1','small_following',0,'Plane_wheel_B')
         wc.add_offset_assembly('wheel_2', 'small_following', 0, 'top_Point3')
         wc.add_offset_assembly('wheel_2', 'small_following', 0, 'Plane_wheel_B')
-        # wc.add_offset_assembly('part13','part9',0,'under_Point4')
+        # wc.saveas(self.full_save_dir, 'Product1', '.CATProduct')
+        # print('Saved as CATProduct...')
 
-        wc.saveas(self.full_save_dir, 'Product1', '.CATProduct')
-        print('Saved as CATProduct...')
 # -------------------------------------------------------------------------------------------------------3
+
         wc.part_open("small2_following", system_root + "\\small2_window")
         wc.Sideplate_param_change("height", gvar.small_height)  # height343
         wc.part_open("small2_left", system_root + "\\small2_window")
@@ -167,12 +165,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("height", gvar.small_height)  # height343
         wc.part_open("small2_right", system_root + "\\small2_window")
         wc.Sideplate_param_change("width", gvar.small2_width)  # width267.5
-
-        # wc.part_open("wheel_1", system_root + "\\small2_window")
-        # wc.part_open("wheel_2", system_root + "\\small2_window")
-        # wc.full_save_dir = self.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+        wc.part_open("wheel_3", system_root + "\\small2_window")
+        wc.part_open("wheel_4", system_root + "\\small2_window")
         print("%s" % self.full_save_dir)
-
         for item in self.small2_catia_save:
             wc.saveas_close(self.full_save_dir, item, '.CATPart')
         wc.open_assembly()
@@ -180,22 +175,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.assembly_open_file(self.full_save_dir, "small2_left", 0)
         wc.assembly_open_file(self.full_save_dir, "small2_top", 0)
         wc.assembly_open_file(self.full_save_dir, "small2_right", 0)
-        wc.assembly_open_file(self.full_save_dir, "wheel_1", 0)
-        wc.assembly_open_file(self.full_save_dir, "wheel_2", 0)
+        wc.assembly_open_file(self.full_save_dir, "wheel_3", 0)
+        wc.assembly_open_file(self.full_save_dir, "wheel_4", 0)
         wc.saveas_specify_target(self.full_save_dir, "small2_following", 'CATPart')
         wc.saveas_specify_target(self.full_save_dir, "small2_left", 'CATPart')
         wc.saveas_specify_target(self.full_save_dir, "small2_top", 'CATPart')
         wc.saveas_specify_target(self.full_save_dir, "small2_right", 'CATPart')
-        wc.saveas_specify_target(self.full_save_dir, "wheel_1", 'CATPart')
-        wc.saveas_specify_target(self.full_save_dir, "wheel_2", 'CATPart')
-
+        wc.saveas_specify_target(self.full_save_dir, "wheel_3", 'CATPart')
+        wc.saveas_specify_target(self.full_save_dir, "wheel_4", 'CATPart')
         wc.show("small2_following.1")  # small2_following
         wc.show("small2_left.1")  # small2_left
         wc.show("small2_top.1")  # small2_top
         wc.show("small2_right.1")  # small2_right
-        wc.show("wheel_1.1")
-        wc.show("wheel_2.1")
-
+        wc.show("wheel_3.1")
+        wc.show("wheel_4.1")
         wc.add_offset_assembly("small2_top", "small2_following", -gvar.small2_width * 2 + 48, "xy plane")  # 變數.
         wc.add_offset_assembly("small2_following", "small2_top", 0, "yz plane")
         wc.add_offset_assembly("small2_following", "small2_top", 0, "zx plane")
@@ -205,19 +198,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.add_offset_assembly("small2_right", "small2_following", -gvar.small_height, "yz plane")  # 變數.
         wc.add_offset_assembly("small2_right", "small2_following", -gvar.small2_width, "xy plane")
         wc.add_offset_assembly("small2_right", "small2_following", 0, "zx plane")
-        wc.add_offset_assembly('wheel_1', 'small2_following', 0, 'top_Point2')
-        wc.add_offset_assembly('wheel_1', 'small2_following', 0, 'Plane_wheel_A')
-        wc.add_offset_assembly('wheel_2', 'small2_following', 0, 'top_Point3')
-        wc.add_offset_assembly('wheel_2', 'small2_following', 0, 'Plane_wheel_A')
-        wc.saveas(self.full_save_dir, 'Product2', '.CATProduct')
-        print('Saved as CATProduct...')
+        wc.add_offset_assembly('wheel_3', 'small2_following', 0, 'top_Point2')
+        wc.add_offset_assembly('wheel_3', 'small2_following', 0, 'Plane_wheel_A')
+        wc.add_offset_assembly('wheel_4', 'small2_following', 0, 'top_Point3')
+        wc.add_offset_assembly('wheel_4', 'small2_following', 0, 'Plane_wheel_A')
+        # wc.saveas(self.full_save_dir, 'Product2', '.CATProduct')
+        # print('Saved as CATProduct...')
 
+        for item in self.AL_Window:
+            wc.saveas_close(self.full_save_dir, item, '.CATProduct')
+#-------------------------------------------------------------------------------------------------------組合
 
         wc.open_assembly()
         wc.assembly_open_file(self.full_save_dir, "Product", 1)
         wc.assembly_open_file(self.full_save_dir, "Product1", 1)
         wc.assembly_open_file(self.full_save_dir, "Product2", 1)
-
         wc.show_p("Product1.1", "following.1")
         wc.show_p('Product1.1','left.1')
         wc.show_p('Product1.1','right.1')
@@ -232,18 +227,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.show_p('Product3.1','small2_left.1')
         wc.show_p('Product3.1','small2_right.1')
         wc.show_p('Product3.1','small2_following.1')
-        wc.show_p('Product3.1','wheel_1.1')
-        wc.show_p('Product3.1','wheel_2.1')
-
+        wc.show_p('Product3.1','wheel_3.1')
+        wc.show_p('Product3.1','wheel_4.1')
         wc.test_2('Product3','small2_left','Product2','small_left','Plane_Product_ZY')
         wc.test_2('Product1','top','Product3','small2_following','Plane_wheel_A')
         wc.test_2('Product2','small_following','Product1','top','Plane_wheel_B')
+        wc.test_2('Product1','top','Product2','wheel_1','Plane_end_B')
+        wc.test_2('Product1','top','Product3','wheel_3','Plane_end_A')
+        wc.test_2('Product1','left','Product2','small_right','Plane_set_end')
+        wc.saveas(self.full_save_dir, 'AL_Window', '.CATProduct')
+        print('Saved as CATProduct...END')
 
-        wc.test_2('Product1','top','Product2','wheel_1','Plane_end_A')
-        wc.test_2('Product1','top','Product3','wheel_1','Plane_end_B')
-
-        # wc.add_offset_assembly('Product','Product1',0,'Plane_Product_ZY')
-        # wc.add_offset_assembly('Procduct','Procduct1',0,'Plane_Product_ZY')
 
     # 開啟關於設定參數介面
     def open(self):

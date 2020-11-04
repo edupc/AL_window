@@ -10,5 +10,6 @@ small2_width = width-120#267.5
 catia_save = ['top','right','following','left']
 small_catia_save = ['small_top','small_left','small_right','small_following']#名稱再來修訂吧3457 小玻璃架
 small2_catia_save = ['small2_following','small2_left','small2_top','small2_right']#名稱再來修訂吧.1235 小玻璃架
+AL_Window = ['Product','Product1','Product2']
 #設定空
 full_save_dir = str()

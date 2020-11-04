@@ -208,6 +208,7 @@ def test_2(element1,element2,element4,element5,element3):
     constraint1.Orientation = 1
     product.Update()
 
+#小燈泡零件
 def show(item):
     catapp = win32.Dispatch("CATIA.Application")
     productdoc = catapp.ActiveDocument
@@ -216,6 +217,7 @@ def show(item):
     product2 = products1.Item("%s" % item)
     product2.ActivateDefaultShape()
 
+#小燈泡組合
 def show_p(item,item1):
     catapp = win32.Dispatch("CATIA.Application")
     productDocument1 = catapp.ActiveDocument
@@ -226,7 +228,25 @@ def show_p(item,item1):
     product3 = products2.Item("%s" % item1)
     product3.ActivateDefaultShape()
 
-
+#組合拘束隱藏
+# def show_off():
+#     catapp = win32.Dispatch("CATIA.Application")
+#     productDocument1 = catapp.ActiveDocument
+#     selection1 = productDocument1.Selection
+#     visPropertySet1 = selection1.VisProperties
+#     documents1 = catapp.Documents
+#     productDocument2 = documents1.Item("Product3.CATProduct")
+#     product1 = productDocument2.Product
+#     constraints1 = product1.Connections("CATIAConstraints")
+#     constraint1 = constraints1.Item("Offset.1")
+#     selection1.Add.constraint1()
+#     visPropertySet1 = visPropertySet1.Parent
+#     bSTR1 = str
+#     bSTR1 = visPropertySet1.Name
+#     bSTR2 = str
+#     bSTR2 = visPropertySet1.Name
+#     visPropertySet1.SetShow (1)
+#     selection1.Clear()
 
 class set_CATIA_workbench_env:
     def __init__(self):
