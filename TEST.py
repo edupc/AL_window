@@ -68,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("width", gvar.width)
         print(self.route)
         if self.route == '':
-            gvar.full_save_dir = wc.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+            gvar.full_save_dir = wc.save_dir(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop'))
         else:
             gvar.full_save_dir = wc.save_dir(self.route)
         self.full_save_dir = gvar.full_save_dir
@@ -107,13 +107,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # -------------------------------------------------------------------------------------------------------2
 
         wc.part_open("small_top", system_root + "\\smalll_window")
-        wc.Sideplate_param_change("height", gvar.small_height)  # 172.5
+        wc.Sideplate_param_change("height", gvar.small_height/2)  # 172.5
         wc.part_open("small_left", system_root + "\\smalll_window")
-        wc.Sideplate_param_change("width", gvar.small_width)  # 255
+        wc.Sideplate_param_change("width", gvar.small_width/2)  # 255
         wc.part_open("small_right", system_root + "\\smalll_window")
-        wc.Sideplate_param_change("width", gvar.small_width)  # 255
+        wc.Sideplate_param_change("width", gvar.small_width/2)  # 255
         wc.part_open("small_following", system_root + "\\smalll_window")
-        wc.Sideplate_param_change("height", gvar.small_height)  # 172.5
+        wc.Sideplate_param_change("height", gvar.small_height/2)  # 172.5
         wc.part_open("wheel_1", system_root + "\\smalll_window")
         wc.part_open("wheel_2", system_root + "\\smalll_window")
         print("%s" % self.full_save_dir)
@@ -138,14 +138,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.show("small_following.1")#small_following
         wc.show("wheel_1.1")
         wc.show("wheel_2.1")
-        wc.add_offset_assembly("small_top", "small_following", (-gvar.small_width * 2) + 50.99 + 10.105,
-                            "xy plane")  # 偏移組合(零件一,零件二,距離,元素)
+        wc.add_offset_assembly("small_top", "small_left",0,
+                            "last_plane")  # 偏移組合(零件一,零件二,距離,元素)
         wc.add_offset_assembly("small_top", "small_following", 0, "yz plane")
         wc.add_offset_assembly("small_top", "small_following", 0, "zx plane")
-        wc.add_offset_assembly("small_following", "small_left", gvar.small_height, "yz plane")  # 變數.一半的h
-        wc.add_offset_assembly("small_following", "small_left", gvar.small_width - 12.69, "xy plane")  # 變數.w-12.69
+        wc.add_offset_assembly("small_following", "small_left", gvar.small_height/2-20.8, "yz plane")  # 變數.一半的h
+        wc.add_offset_assembly("small_following", "small_left", 0, "xy plane1")  # 變數.w-12.69
         wc.add_offset_assembly("small_following", "small_left", 0, "zx plane")
-        wc.add_offset_assembly("small_left", "small_right", -gvar.small_height * 2, "yz plane")  # 變數
+        wc.add_offset_assembly("small_left", "small_right", -gvar.small_height+20.8, "yz plane")  # 變數
         wc.add_offset_assembly("small_left", "small_right", 0, "xy plane")
         wc.add_offset_assembly("small_left", "small_right", 0, "zx plane")
         wc.add_offset_assembly('wheel_1','small_following',0,'top_Point2')
@@ -158,13 +158,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 # -------------------------------------------------------------------------------------------------------3
 
         wc.part_open("small2_following", system_root + "\\small2_window")
-        wc.Sideplate_param_change("height", gvar.small_height)  # height343
+        wc.Sideplate_param_change("height", gvar.small_height/2)  # height343
         wc.part_open("small2_left", system_root + "\\small2_window")
-        wc.Sideplate_param_change("width", gvar.small2_width)  # width267.5
+        wc.Sideplate_param_change("width", gvar.small2_width/2)  # width267.5
         wc.part_open("small2_top", system_root + "\\small2_window")
-        wc.Sideplate_param_change("height", gvar.small_height)  # height343
+        wc.Sideplate_param_change("height", gvar.small_height/2)  # height343
         wc.part_open("small2_right", system_root + "\\small2_window")
-        wc.Sideplate_param_change("width", gvar.small2_width)  # width267.5
+        wc.Sideplate_param_change("width", gvar.small2_width/2)  # width267.5
         wc.part_open("wheel_3", system_root + "\\small2_window")
         wc.part_open("wheel_4", system_root + "\\small2_window")
         print("%s" % self.full_save_dir)
@@ -189,14 +189,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.show("small2_right.1")  # small2_right
         wc.show("wheel_3.1")
         wc.show("wheel_4.1")
-        wc.add_offset_assembly("small2_top", "small2_following", -gvar.small2_width * 2 + 48, "xy plane")  # 變數.
+        wc.add_offset_assembly("small2_top", "small2_following", -gvar.small2_width + 48, "xy plane")  # 變數.
         wc.add_offset_assembly("small2_following", "small2_top", 0, "yz plane")
         wc.add_offset_assembly("small2_following", "small2_top", 0, "zx plane")
-        wc.add_offset_assembly("small2_left", "small2_following", gvar.small_height, "yz plane")  # 變數.
-        wc.add_offset_assembly("small2_left", "small2_following", -gvar.small2_width, "xy plane")  # 變數.
+        wc.add_offset_assembly("small2_left", "small2_following", gvar.small_height/2, "yz plane")  # 變數.
+        wc.add_offset_assembly("small2_left", "small2_following", -gvar.small2_width/2, "xy plane")  # 變數.
         wc.add_offset_assembly("small2_left", "small2_following", 0, "zx plane")
-        wc.add_offset_assembly("small2_right", "small2_following", -gvar.small_height, "yz plane")  # 變數.
-        wc.add_offset_assembly("small2_right", "small2_following", -gvar.small2_width, "xy plane")
+        wc.add_offset_assembly("small2_right", "small2_following", -gvar.small_height/2, "yz plane")  # 變數.
+        wc.add_offset_assembly("small2_right", "small2_following", -gvar.small2_width/2, "xy plane")
         wc.add_offset_assembly("small2_right", "small2_following", 0, "zx plane")
         wc.add_offset_assembly('wheel_3', 'small2_following', 0, 'top_Point2')
         wc.add_offset_assembly('wheel_3', 'small2_following', 0, 'Plane_wheel_A')
@@ -229,6 +229,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.show_p('Product3.1','small2_following.1')
         wc.show_p('Product3.1','wheel_3.1')
         wc.show_p('Product3.1','wheel_4.1')
+
         wc.test_2('Product3','small2_left','Product2','small_left','Plane_Product_ZY')
         wc.test_2('Product1','top','Product3','small2_following','Plane_wheel_A')
         wc.test_2('Product2','small_following','Product1','top','Plane_wheel_B')
@@ -269,8 +270,12 @@ class Create(QtWidgets.QMainWindow, creat):
     #設定設定完成提示框(yes or no)
     def set_ok(self):
         if self.ui.lineEdit_width.text() != '' and self.ui.lineEdit_height.text() != '':
-            gvar.width = float(self.ui.lineEdit_width.text())
-            gvar.height = float(self.ui.lineEdit_height.text())
+            gvar.width = float(self.ui.lineEdit_width.text())/2-13.65
+            gvar.height = float(self.ui.lineEdit_height.text())/2
+            gvar.small_height = float(self.ui.lineEdit_width.text())/2-49
+            gvar.small_width = float(self.ui.lineEdit_height.text())-76.49
+            gvar.small2_width = float(self.ui.lineEdit_height.text())-48.19
+
             self.reply = QMessageBox.question(self, "提示", "設定完成\nSet Ok", QMessageBox.Yes, QMessageBox.No)
             if self.reply == QMessageBox.Yes:
                 self.hide()
