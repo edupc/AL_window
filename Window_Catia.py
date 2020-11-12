@@ -5,6 +5,8 @@ import re
 import subprocess
 from subprocess import CREATE_NEW_CONSOLE
 from datetime import datetime,timezone,timedelta
+from PyQt5.QtWidgets import QMessageBox, QApplication
+
 
 
 def start_CATIA(self):
@@ -24,8 +26,9 @@ def start_CATIA(self):
                         print('get CATIA dir and env is %s , %s' % (CATIA_dir, env_name))
 
     else:
-        tk.messagebox.showwarning('WARNING', 'No Suitable V5-6R Version CATIA installation found on this machine',
-                                  parent=self.master)
+        self.reply = QMessageBox.question(self, "警示", "catia未完整開啟?\nAre you sure you want to close?", QMessageBox.Yes, QMessageBox.No)
+        # tk.messagebox.showwarning('WARNING', 'No Suitable V5-6R Version CATIA installation found on this machine',
+        #                           parent=self.master)
 
     chk = [p.info for p in psutil.process_iter(attrs=['pid', 'name']) if 'CNEXT' in p.info['name']]
     print(chk)

@@ -21,3 +21,4 @@ def add_offset_assembly(element1,element2,dist,relation):
     constraint.Orientation = 0
     product.Update()
     return True
+PyQt5~=5.15.1
