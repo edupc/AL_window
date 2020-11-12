@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "窗體生成主視窗"))
         self.pushButton_setup.setText(_translate("MainWindow", "窗體生成參數\n"
                                                                " window Generate Parameter"))
         self.pushButton_start.setText(_translate("MainWindow", "開始生成\n"
@@ -363,7 +363,7 @@ class creat (object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "窗體參數設置"))
         self.radioButton_other.setText(_translate("MainWindow", "其他"))
         self.label_4.setText(_translate("MainWindow", "窗體寬(width)/mm"))
         self.label_5.setText(_translate("MainWindow", "窗體高(height)/mm"))
@@ -375,8 +375,6 @@ class creat (object):
         self.pushButton_setup.setText(_translate("MainWindow", "設定參數(Set Parameter)"))
         self.pushButton__restset.setText(_translate("MainWindow", "重設參數(Clear Parameter)"))
         self.pushButton_close.setText(_translate("MainWindow", "離開(Exit)"))
-        self.lineEdit_height.setText(_translate("MainWindow", "500"))
-        self.lineEdit_width.setText(_translate("MainWindow", "500"))
         self.label_7.setText(_translate("MainWindow", "選擇箱體材料與烤漆顏色(僅影響圖面輸出)\n"
                                                       "Select Box material and Coating color(only affects draft output)"))
 
