@@ -1,13 +1,12 @@
-from untitled import Ui_MainWindow, creat ,about
-import sys , os
-from PyQt5 import QtWidgets, QtGui
-import globals_var as gvar
-from PyQt5.QtWidgets import QMessageBox, QAbstractItemView, QTableWidgetItem,QApplication
-import Window_Catia as wc
-import string,datetime
-from datetime import datetime,timezone,timedelta
-import win32com.client as win32
+import os
+import sys
 
+from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtWidgets import QMessageBox, QApplication
+
+import Window_Catia as wc
+import globals_var as gvar
+from untitled import Ui_MainWindow, creat, about
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
@@ -68,7 +67,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         wc.Sideplate_param_change("width", gvar.width)
         print(self.route)
         if self.route == '':
-            gvar.full_save_dir = wc.save_dir('C:\\Users\\PDAL-BM-1\\Desktop')
+            gvar.full_save_dir = wc.save_dir(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop'))
         else:
             gvar.full_save_dir = wc.save_dir(self.route)
         self.full_save_dir = gvar.full_save_dir
