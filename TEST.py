@@ -1,13 +1,15 @@
 import os
 import sys
 
-from PyQt5 import QtWidgets, QtGui,QtCore
+from PyQt5 import QtWidgets, QtGui,QtCore,Qt
 from PyQt5.QtWidgets import QMessageBox, QApplication,QTableWidget,QTableWidgetItem,QAbstractItemView
 
 import Window_Catia as wc
 import globals_var as gvar
 from untitled import Ui_MainWindow, creat, about
-
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
@@ -29,13 +31,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # 關閉量測介面
     def Close(self):
-        # self.close()
-        self.reply = QMessageBox.question(self, "警示", "確定離開本系統?\nAre you sure you want to close?", QMessageBox.Yes,
-                                          QMessageBox.No)
-        if self.reply == QMessageBox.Yes:
-            self.close()
-        elif self.reply == QMessageBox.No:
-            pass
+        self.close()
+
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.reply = QMessageBox.question(self, "警示", "確定離開本系統?\nAre you sure you want to close?", QMessageBox.Yes,
@@ -286,32 +283,88 @@ class Create(QtWidgets.QMainWindow, creat):
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         #選定一行
         self.ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.number = 0
+        self.number = 0#設定表格參數'number'=0(初始化)
+        self.ui.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        # 將右鍵菜單綁定到槽函數generateMenu
+        self.ui.tableWidget.customContextMenuRequested.connect(self.generateMenu)
+        # self.setLayout(Create)
+
     def insert_table(self):
         h = self.ui.lineEdit_H.text()
         w = self.ui.lineEdit_W.text()
+        q = self.ui.lineEdit_Quantity.text()
         type = self.ui.comboBox_type.currentText()
-        print(type,w,h)
-        self.ui.tableWidget.setItem(self.number, 0, QTableWidgetItem(type))
-        self.ui.tableWidget.setItem(self.number, 1, QTableWidgetItem(h))
-        self.ui.tableWidget.setItem(self.number, 2, QTableWidgetItem(w))
-        self.ui.tableWidget.item(self.number, 0).setTextAlignment(
-            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        self.ui.tableWidget.item(self.number, 1).setTextAlignment(
-            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        self.ui.tableWidget.item(self.number, 2).setTextAlignment(
-            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        # 設定輸入文字置中以及上下置中
-        self.number += 1
-        print(self.number)
-        if self.number >= 0:
-           self.ui.tableWidget.setRowCount(self.number+1)
-        print(self.number)
+        print(type,w,h,q)#設定參數tape,w,h,q,
+        #抓取參數寫入表格(number,0123)
+        # if self.number >=0:
+        #     self.qwe == True
+        # else:
+        #     qwe == False
+        if self.number >=0:
+            self.ui.tableWidget.setItem(self.number, 0, QTableWidgetItem(type))
+            self.ui.tableWidget.setItem(self.number, 1, QTableWidgetItem(h))
+            self.ui.tableWidget.setItem(self.number, 2, QTableWidgetItem(w))
+            self.ui.tableWidget.setItem(self.number, 3, QTableWidgetItem(q))
+            # 設定輸入文字置中以及上下置中
+            self.ui.tableWidget.item(self.number, 0).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            self.ui.tableWidget.item(self.number, 1).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            self.ui.tableWidget.item(self.number, 2).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            self.ui.tableWidget.item(self.number, 3).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            # 設定1時候參數+1
+            self.number += 1
+            if self.number >= 0:
+                self.ui.tableWidget.setRowCount(self.number + 1)
+        else:
+            self.number = 0
+            pass
+
+    def generateMenu(self, pos):
+        # 計算有多少條數據，默認-1,self.number
+
+        for i in self.ui.tableWidget.selectionModel().selection().indexes():
+            self.number = i.row()
+
+        # 表格中只有兩條有效數據，所以只在前兩行支持右鍵彈出菜單
+        if self.number < 80:
+            menu = QMenu()
+            item1 = menu.addAction(u'刪除')
+            item2 = menu.addAction(u'設定')
+            item3 = menu.addAction(u'我不知道他要幹嘛')
+            action = menu.exec_(self.ui.tableWidget.mapToGlobal(pos))
+            # 顯示選中行的數據文本
+            if action == item1:
+                print('你選了選項一，當前行文字內容是：', self.ui.tableWidget.item(self.number, 0).text(),
+                      self.ui.tableWidget.item(self.number, 1).text(),
+                      self.ui.tableWidget.item(self.number, 2).text())
+                self.row = self.ui.tableWidget.currentRow()
+                self.ui.tableWidget.removeRow(self.row)
+                self.number -= 1
+            if action == item2:
+                print( self.ui.tableWidget.item(self.number, 0).text(),
+                      self.ui.tableWidget.item(self.number, 1).text(),
+                      self.ui.tableWidget.item(self.number, 2).text())
+                self.ui.tableWidget.setEditTriggers(QAbstractItemView.CurrentChanged)
+
+
+            if action == item3:
+                print( self.ui.tableWidget.item(self.number, 0).text(),
+                      self.ui.tableWidget.item(self.number, 1).text(),
+                      self.ui.tableWidget.item(self.number, 2).text())
+
+        else:
+            self.number = 0
+            pass
+
     def dele(self):
         self.row = self.ui.tableWidget.currentRow()
         print(self.row)
         self.ui.tableWidget.removeRow(self.row)
         self.number-= 1
+
     # 設定設定完成提示框(yes or no)
     def set_ok(self):
        pass
@@ -329,7 +382,7 @@ class Create(QtWidgets.QMainWindow, creat):
     def reset(self):
         self.ui.lineEdit_H.setText('')
         self.ui.lineEdit_W.setText('')
-        # self.ui.comboBox_type.itemText()
+        self.ui.comboBox_type.setCurrentIndex(0)
         print(self.ui.comboBox_type.currentText())
 
 # about介面
