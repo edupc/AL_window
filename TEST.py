@@ -1,8 +1,8 @@
 import os
 import sys
 
-from PyQt5 import QtWidgets, QtGui,QtCore,Qt
-from PyQt5.QtWidgets import QMessageBox, QApplication,QTableWidget,QTableWidgetItem,QAbstractItemView
+from PyQt5 import QtWidgets, QtGui, QtCore, Qt
+from PyQt5.QtWidgets import QMessageBox, QApplication, QTableWidget, QTableWidgetItem, QAbstractItemView
 
 import Window_Catia as wc
 import globals_var as gvar
@@ -10,6 +10,7 @@ from untitled import Ui_MainWindow, creat, about
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
@@ -32,7 +33,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     # 關閉量測介面
     def Close(self):
         self.close()
-
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.reply = QMessageBox.question(self, "警示", "確定離開本系統?\nAre you sure you want to close?", QMessageBox.Yes,
@@ -272,35 +272,41 @@ class Create(QtWidgets.QMainWindow, creat):
         self.ui.label_window_pic.setPixmap(QtGui.QPixmap(BASE_DIR + '\\window_test_image'))
         # --------------根據框框大小縮放圖片
         self.ui.label_window_pic.setScaledContents(True)
-
-        # self.ui.pushButton_setup.clicked.connect(self.set_ok)
+        self.ui.pushButton_set_up.clicked.connect(self.set_ok)
         self.ui.pushButton_re.clicked.connect(self.reset)
         self.ui.pushButton_cancel.clicked.connect(self.close)
         self.ui.pushButton_set.clicked.connect(self.insert_table)
         self.ui.pushButton_delete.clicked.connect(self.dele)
         self.setWindowIcon(QtGui.QIcon(BASE_DIR + "\\icon.ico"))
-        #不能改寫
+        # 不能改寫
         self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        #選定一行
+        # 選定一行
         self.ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.number = 0#設定表格參數'number'=0(初始化)
+        self.number = 0
+        # 設定表格參數'number'=0(初始化)
         self.ui.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         # 將右鍵菜單綁定到槽函數generateMenu
         self.ui.tableWidget.customContextMenuRequested.connect(self.generateMenu)
         # self.setLayout(Create)
+        # 鎖定H,W欄位之輸入值為數字非英文跟其他符號BUT可中文未修除(有最大上限值)
+        self.ui.lineEdit_H.setValidator(QtGui.QIntValidator())
+        self.ui.lineEdit_W.setValidator(QtGui.QIntValidator())
+        # 表達式$符號看不懂可以刪掉他看看插在哪Quantity欄位輸入，可中文未修除(可以把表格寫爆)
+        my_regex = QtCore.QRegExp("[0-9]+$")
+        my_validator = QtGui.QRegExpValidator(my_regex, self.ui.lineEdit_Quantity)
+        self.ui.lineEdit_Quantity.setValidator(my_validator)
+
 
     def insert_table(self):
+
         h = self.ui.lineEdit_H.text()
         w = self.ui.lineEdit_W.text()
         q = self.ui.lineEdit_Quantity.text()
         type = self.ui.comboBox_type.currentText()
-        print(type,w,h,q)#設定參數tape,w,h,q,
-        #抓取參數寫入表格(number,0123)
-        # if self.number >=0:
-        #     self.qwe == True
-        # else:
-        #     qwe == False
-        if self.number >=0:
+        # 設定參數tape,w,h,q,
+        self.set_number()
+        if self.measure_check == True:
+            # 抓取參數寫入表格(number,0123)
             self.ui.tableWidget.setItem(self.number, 0, QTableWidgetItem(type))
             self.ui.tableWidget.setItem(self.number, 1, QTableWidgetItem(h))
             self.ui.tableWidget.setItem(self.number, 2, QTableWidgetItem(w))
@@ -314,13 +320,27 @@ class Create(QtWidgets.QMainWindow, creat):
                 QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.ui.tableWidget.item(self.number, 3).setTextAlignment(
                 QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-            # 設定1時候參數+1
+            # 設定執行1次的時候參數+1,和格子增加參數值
             self.number += 1
-            if self.number >= 0:
-                self.ui.tableWidget.setRowCount(self.number + 1)
-        else:
+            self.ui.tableWidget.setRowCount(self.number + 1)
+            print(type, w, h, q)
+        elif self.measure_check == False:
+            # 假設格子參數小於0那參數重新寫成0
             self.number = 0
-            pass
+            self.ui.tableWidget.setRowCount(self.number + 2)
+            self.ui.tableWidget.setItem(self.number, 0, QTableWidgetItem(type))
+            self.ui.tableWidget.setItem(self.number, 1, QTableWidgetItem(h))
+            self.ui.tableWidget.setItem(self.number, 2, QTableWidgetItem(w))
+            self.ui.tableWidget.setItem(self.number, 3, QTableWidgetItem(q))
+            self.ui.tableWidget.item(self.number, 0).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            self.ui.tableWidget.item(self.number, 1).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            self.ui.tableWidget.item(self.number, 2).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            self.ui.tableWidget.item(self.number, 3).setTextAlignment(
+                QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+            self.number = 1
 
     def generateMenu(self, pos):
         # 計算有多少條數據，默認-1,self.number
@@ -332,42 +352,57 @@ class Create(QtWidgets.QMainWindow, creat):
         if self.number < 80:
             menu = QMenu()
             item1 = menu.addAction(u'刪除')
-            item2 = menu.addAction(u'設定')
-            item3 = menu.addAction(u'我不知道他要幹嘛')
+            item2 = menu.addAction(u'表格鎖定解除')
+            item3 = menu.addAction(u'表格鎖定')
             action = menu.exec_(self.ui.tableWidget.mapToGlobal(pos))
             # 顯示選中行的數據文本
             if action == item1:
-                print('你選了選項一，當前行文字內容是：', self.ui.tableWidget.item(self.number, 0).text(),
-                      self.ui.tableWidget.item(self.number, 1).text(),
-                      self.ui.tableWidget.item(self.number, 2).text())
-                self.row = self.ui.tableWidget.currentRow()
-                self.ui.tableWidget.removeRow(self.row)
-                self.number -= 1
+                self.dele()
             if action == item2:
-                print( self.ui.tableWidget.item(self.number, 0).text(),
-                      self.ui.tableWidget.item(self.number, 1).text(),
-                      self.ui.tableWidget.item(self.number, 2).text())
                 self.ui.tableWidget.setEditTriggers(QAbstractItemView.CurrentChanged)
-
-
             if action == item3:
-                print( self.ui.tableWidget.item(self.number, 0).text(),
-                      self.ui.tableWidget.item(self.number, 1).text(),
-                      self.ui.tableWidget.item(self.number, 2).text())
+                self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         else:
             self.number = 0
             pass
 
     def dele(self):
-        self.row = self.ui.tableWidget.currentRow()
-        print(self.row)
-        self.ui.tableWidget.removeRow(self.row)
-        self.number-= 1
+        self.set_number()
+        if self.measure_check == True:
+            self.row = self.ui.tableWidget.currentRow()
+            print(self.row)
+            self.ui.tableWidget.removeRow(self.row)
+            self.number -= 1
+        elif self.measure_check == False:
+            self.reply = QMessageBox.question(self, "提示", "不可再刪除\nDon't dele", QMessageBox.Yes,)
+            if self.reply == QMessageBox.Yes:
+                pass
 
+    def set_number(self):
+        if self.number >= 0:
+            self.measure_check = True
+        elif self.number == -1:
+            self.measure_check = False
     # 設定設定完成提示框(yes or no)
     def set_ok(self):
-       pass
+        if self.ui.lineEdit_W.text() != '' and self.ui.lineEdit_H.text() != '':
+            gvar.width = float(self.ui.lineEdit_W.text()) / 2 - 13.65
+            gvar.height = float(self.ui.lineEdit_H.text()) / 2
+            gvar.small_height = float(self.ui.lineEdit_W.text()) / 2 - 49
+            gvar.small_width = float(self.ui.lineEdit_H.text()) - 76.49
+            gvar.small2_width = float(self.ui.lineEdit_H.text()) - 48.19
+
+            self.reply = QMessageBox.question(self, "提示", "設定完成\nSet Ok", QMessageBox.Yes, QMessageBox.No)
+            if self.reply == QMessageBox.Yes:
+                self.hide()
+                self.window = MainWindow()
+                self.window.show()
+            elif self.reply == QMessageBox.No:
+                pass
+                # QtWidgets.QCloseEvent.ignore()
+        else:
+            self.reply = QMessageBox.question(self, "錯誤", "設定未完成", QMessageBox.Yes)
 
     def close(self):
         self.hide()
@@ -384,6 +419,7 @@ class Create(QtWidgets.QMainWindow, creat):
         self.ui.lineEdit_W.setText('')
         self.ui.comboBox_type.setCurrentIndex(0)
         print(self.ui.comboBox_type.currentText())
+
 
 # about介面
 class About(QtWidgets.QMainWindow, about):
