@@ -1,8 +1,8 @@
 import os
 import sys
 
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QMessageBox, QApplication
+from PyQt5 import QtWidgets, QtGui,QtCore
+from PyQt5.QtWidgets import QMessageBox, QApplication,QTableWidget,QTableWidgetItem,QAbstractItemView
 
 import Window_Catia as wc
 import globals_var as gvar
@@ -270,36 +270,51 @@ class Create(QtWidgets.QMainWindow, creat):
         super(Create, self).__init__()  # 繼承
         self.ui = creat()
         self.ui.setupUi(self)
-        self.ui.pushButton_setup.clicked.connect(self.set_ok)
+        self.ui.pushButton_set_up.clicked.connect(self.set_ok)
         # --------------圖片
-        self.ui.label_image.setPixmap(QtGui.QPixmap(BASE_DIR + '\\window_test_image'))
+        self.ui.label_window_pic.setPixmap(QtGui.QPixmap(BASE_DIR + '\\window_test_image'))
         # --------------根據框框大小縮放圖片
-        self.ui.label_image.setScaledContents(True)
+        self.ui.label_window_pic.setScaledContents(True)
 
         # self.ui.pushButton_setup.clicked.connect(self.set_ok)
-        self.ui.pushButton__restset.clicked.connect(self.reset)
-        self.ui.pushButton_close.clicked.connect(self.close)
+        self.ui.pushButton_re.clicked.connect(self.reset)
+        self.ui.pushButton_cancel.clicked.connect(self.close)
+        self.ui.pushButton_set.clicked.connect(self.insert_table)
+        self.ui.pushButton_delete.clicked.connect(self.dele)
         self.setWindowIcon(QtGui.QIcon(BASE_DIR + "\\icon.ico"))
-
+        #不能改寫
+        self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        #選定一行
+        self.ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.number = 0
+    def insert_table(self):
+        h = self.ui.lineEdit_H.text()
+        w = self.ui.lineEdit_W.text()
+        type = self.ui.comboBox_type.currentText()
+        print(type,w,h)
+        self.ui.tableWidget.setItem(self.number, 0, QTableWidgetItem(type))
+        self.ui.tableWidget.setItem(self.number, 1, QTableWidgetItem(h))
+        self.ui.tableWidget.setItem(self.number, 2, QTableWidgetItem(w))
+        self.ui.tableWidget.item(self.number, 0).setTextAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.ui.tableWidget.item(self.number, 1).setTextAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.ui.tableWidget.item(self.number, 2).setTextAlignment(
+            QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        # 設定輸入文字置中以及上下置中
+        self.number += 1
+        print(self.number)
+        if self.number >= 0:
+           self.ui.tableWidget.setRowCount(self.number+1)
+        print(self.number)
+    def dele(self):
+        self.row = self.ui.tableWidget.currentRow()
+        print(self.row)
+        self.ui.tableWidget.removeRow(self.row)
+        self.number-= 1
     # 設定設定完成提示框(yes or no)
     def set_ok(self):
-        if self.ui.lineEdit_width.text() != '' and self.ui.lineEdit_height.text() != '':
-            gvar.width = float(self.ui.lineEdit_width.text()) / 2 - 13.65
-            gvar.height = float(self.ui.lineEdit_height.text()) / 2
-            gvar.small_height = float(self.ui.lineEdit_width.text()) / 2 - 49
-            gvar.small_width = float(self.ui.lineEdit_height.text()) - 76.49
-            gvar.small2_width = float(self.ui.lineEdit_height.text()) - 48.19
-
-            self.reply = QMessageBox.question(self, "提示", "設定完成\nSet Ok", QMessageBox.Yes, QMessageBox.No)
-            if self.reply == QMessageBox.Yes:
-                self.hide()
-                self.window = MainWindow()
-                self.window.show()
-            elif self.reply == QMessageBox.No:
-                pass
-                # QtWidgets.QCloseEvent.ignore()
-        else:
-            self.reply = QMessageBox.question(self, "錯誤", "設定未完成", QMessageBox.Yes)
+       pass
 
     def close(self):
         self.hide()
@@ -312,9 +327,10 @@ class Create(QtWidgets.QMainWindow, creat):
         self.window.show()
 
     def reset(self):
-        self.ui.lineEdit_width.setText('')
-        self.ui.lineEdit_height.setText('')
-
+        self.ui.lineEdit_H.setText('')
+        self.ui.lineEdit_W.setText('')
+        # self.ui.comboBox_type.itemText()
+        print(self.ui.comboBox_type.currentText())
 
 # about介面
 class About(QtWidgets.QMainWindow, about):
