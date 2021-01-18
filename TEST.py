@@ -295,8 +295,7 @@ class Create(QtWidgets.QMainWindow, creat):
         my_regex = QtCore.QRegExp("[0-9]+$")
         my_validator = QtGui.QRegExpValidator(my_regex, self.ui.lineEdit_Quantity)
         self.ui.lineEdit_Quantity.setValidator(my_validator)
-
-
+        self.lines = []
     def insert_table(self):
 
         h = self.ui.lineEdit_H.text()
@@ -324,6 +323,7 @@ class Create(QtWidgets.QMainWindow, creat):
             self.number += 1
             self.ui.tableWidget.setRowCount(self.number + 1)
             print(type, w, h, q)
+            print(self.number,self.measure_check)
         elif self.measure_check == False:
             # 假設格子參數小於0那參數重新寫成0
             self.number = 0
@@ -341,7 +341,7 @@ class Create(QtWidgets.QMainWindow, creat):
             self.ui.tableWidget.item(self.number, 3).setTextAlignment(
                 QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.number = 1
-
+            print(self.number,self.measure_check)
     def generateMenu(self, pos):
         # 計算有多少條數據，默認-1,self.number
 
@@ -368,22 +368,50 @@ class Create(QtWidgets.QMainWindow, creat):
             pass
 
     def dele(self):
+        #
+        # if self.ui.tableWidget.item(1,1).text() != '':
+        #     pass
+        # else:
+        # self.ui.tableWidget.cellPressed('123')
+
+
         self.set_number()
         if self.measure_check == True:
             self.row = self.ui.tableWidget.currentRow()
+            print('123')
             print(self.row)
+            if self.row == -1:
+                self.row = 0
             self.ui.tableWidget.removeRow(self.row)
             self.number -= 1
+            # self.measure_check = True
+            # self.ui.tableWidget.setRowCount(self.number)
+            print(self.number,self.measure_check)
+
         elif self.measure_check == False:
-            self.reply = QMessageBox.question(self, "提示", "不可再刪除\nDon't dele", QMessageBox.Yes,)
+            self.reply = QMessageBox.question(self, "提示", "不可再刪除\nDon't dele", QMessageBox.Yes, )
             if self.reply == QMessageBox.Yes:
+                print(self.number,self.measure_check)
+                # self.measure_check = True
                 pass
 
+        # removeline = []
+        # for line in self.lines:
+        #     if line[1].isChecked():
+        #         row = self.table.rowCount()
+        #         for x in range(row, 0, -1):
+        #             if line[0] == self.table.item(x - 1, 0).text():
+        #                 self.table.removeRow(x - 1)
+        #                 removeline.append(line)
+        # for line in removeline:
+        #     self.lines.remove(line)
+        # self.settext('删除在左边checkbox中选中的行，使用了一个笨办法取得行号\n，不知道有没有其他可以直接取得行号的方法！')
     def set_number(self):
         if self.number >= 0:
             self.measure_check = True
         elif self.number == -1:
             self.measure_check = False
+
     # 設定設定完成提示框(yes or no)
     def set_ok(self):
         if self.ui.lineEdit_W.text() != '' and self.ui.lineEdit_H.text() != '':
@@ -417,9 +445,21 @@ class Create(QtWidgets.QMainWindow, creat):
     def reset(self):
         self.ui.lineEdit_H.setText('')
         self.ui.lineEdit_W.setText('')
+        self.ui.lineEdit_Quantity.setText('')
         self.ui.comboBox_type.setCurrentIndex(0)
-        print(self.ui.comboBox_type.currentText())
+        self.ui.tableWidget.clearContents()
+        self.number = 0
+        self.ui.tableWidget.setRowCount(self.number + 1)
+        print('reset')
 
+        # self.number = 0
+        # self.ui.tableWidget.setRowCount(self.number + 2)
+        # self.number = 1
+        # item = self.ui.tableWidget.verticalHeaderItem(0)
+        # item.setText(self.ui._translate("MainWindow", "1"))
+        # self.ui.tableWidget.item(self.number,1).setText('')
+        # # self.ui.tableWidget.item(self.number, 2).text('')
+        # # self.ui.tableWidget.item(self.number, 3).text('')
 
 # about介面
 class About(QtWidgets.QMainWindow, about):
