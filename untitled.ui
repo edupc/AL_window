@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>605</width>
-    <height>644</height>
+    <height>799</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>602</width>
-      <height>624</height>
+      <height>776</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -58,6 +58,41 @@
          <property name="text">
           <string>開始生成
 Start Generating</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_setup_dwg">
+         <property name="font">
+          <font>
+           <family>微軟正黑體</family>
+           <pointsize>18</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="text">
+          <string>圖面生成參數
+ Window  DWG Generate Parameter</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_start_dwg">
+         <property name="font">
+          <font>
+           <family>微軟正黑體</family>
+           <pointsize>18</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>開始生成圖面
+Start Generating DWG</string>
          </property>
         </widget>
        </item>
@@ -276,7 +311,6 @@ About This System:</string>
  </widget>
  <resources>
   <include location="123.qrc"/>
-  <include location="../../../.designer/backup/123.qrc"/>
  </resources>
  <connections>
   <connection>
