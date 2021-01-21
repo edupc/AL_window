@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="newPrefix">
-    <file>mprdc_logo.png</file>
-    <file>mprdc_logo.jpg</file>
-  </qresource>
-</RCC>
